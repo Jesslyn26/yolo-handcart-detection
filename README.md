@@ -10,21 +10,17 @@ Rather than training a detector from scratch, the project focuses on leveraging 
 
 The goals of this project are to:
 
-- Collect and curate a dataset of handcart images from publicly available sources.
-- Annotate images with bounding boxes for supervised object detection.
-- Fine-tune a pretrained YOLO model to detect handcarts.
-- Evaluate model performance using both quantitative metrics and qualitative analysis.
-- Track experiments and model versions using tools such as Weights & Biases (W&B).
-- Build a simple inference pipeline or demo application for testing predictions.
-- (Optional) Explore continuous retraining and model monitoring workflows.
+- Build a reproducible **Bronze → Silver → Gold data pipeline**
+- Collect diverse real-world images from the internet (scrape data from the internet)
+- Filter noisy data using embedding similarity (CLIP)
+- Auto-label images using foundation models (GroundingDINO: ref: https://medium.com/data-science/automatic-labeling-of-object-detection-datasets-using-groundingdino-b66c486656fe)
+- Construct a YOLO-compatible dataset with train/val/test split
+- Fine-tune a pretrained YOLO model (YOLOv8)
+- Evaluate using standard object detection metrics
+- Track experiments using Weights & Biases
+- Enable real-time inference via Streamlit/API
 
 ## Proposed Workflow
-
-# 🟦 YOLO Handcart Detection (Data Engine + Training Pipeline)
-
-## 📌 Overview
-
-This project builds a **reproducible computer vision data engine** to detect **handcarts** using a pretrained YOLO model.
 
 Instead of manually labeling everything from scratch, the system uses a **data-centric AI approach**:
 
@@ -38,25 +34,7 @@ Instead of manually labeling everything from scratch, the system uses a **data-c
 - Track experiments using Weights & Biases
 - Enable real-time inference via Streamlit/API
 
-The focus is on **data pipeline design, automation, and scalable ML systems**, not just model training.
-
----
-
-## 🎯 Objectives
-
-- Build a reproducible **Bronze → Silver → Gold data pipeline**
-- Collect diverse real-world images from the internet
-- Filter noisy data using embedding similarity (CLIP)
-- Auto-label images using foundation models (GroundingDINO)
-- Construct a YOLO-compatible dataset with train/val/test split
-- Fine-tune a pretrained YOLO model (YOLOv8)
-- Evaluate using standard object detection metrics
-- Track experiments using Weights & Biases
-- Enable real-time inference via Streamlit/API
-
----
-
-## OverallSystem Architecture
+## Overall System Architecture
 
 Internet Images
       ↓
@@ -89,6 +67,7 @@ Optionally retains a small fraction of low-score samples for robustness
 Prepares dataset for labeling
 
 Output: data/silver/{batch_id}/
+
 ## Gold Layer (Dataset Construction)
 
 - Uses GroundingDINO for auto labeling.
@@ -102,6 +81,7 @@ Output: data/silver/{batch_id}/
 - Generates data.yaml automatically for YOLO training
 
 Output structure:
+```text
 data/gold/{batch_id}/
 ├── images/
 │   ├── train/
@@ -112,6 +92,7 @@ data/gold/{batch_id}/
 │   ├── val/
 │   └── test/
 └── data.yaml
+```
 
 ## Model Training
 
@@ -140,7 +121,7 @@ Supports:
 - Real-time inference (future extension)
 - API-based inference (future extension)
 
-### Experiment Tracking
+## Experiment Tracking
 
 Each experiment is fully reproducible using: batch_id = YYYYMMDD_HHMMSS
 
